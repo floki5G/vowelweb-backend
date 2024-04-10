@@ -3,75 +3,84 @@ import Joi from "joi";
 import requestSchemaValidator from "../middlewares/validator";
 
 
-// ? validate request body for post items
+export const categoryValidator = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const object = Joi.object({
+        category_id: Joi.number().optional(),
+        name: Joi.string().required(),
+        is_active: Joi.boolean().required(),
+        is_disabled: Joi.boolean().required(),
+        is_new: Joi.boolean().required(),
+    });
+    await requestSchemaValidator(req, res, next, object);
+};
 
-export const validatePostItems = (req: Request, res: Response, next: NextFunction) => {
-    const schema = Joi.object({
+
+export const productValidator = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const object = Joi.object({
+        category_id: Joi.number().required(),
+        product_id: Joi.number().optional(),
         name: Joi.string().required(),
         price: Joi.number().required(),
-        description: Joi.string().required(),
-        category: Joi.string().required(),
+        is_active: Joi.boolean().required(),
+        is_disabled: Joi.boolean().required(),
     });
-    requestSchemaValidator(req, res, next, schema);
+    await requestSchemaValidator(req, res, next, object);
+};
+
+export const categoryProductValidator = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const object = Joi.object({
+        id: Joi.number().optional(),
+        category_id: Joi.number().required(),
+        product_id: Joi.number().required(),
+        is_active: Joi.boolean().required(),
+        is_disabled: Joi.boolean().required(),
+        is_new: Joi.boolean().required(),
+    });
+    await requestSchemaValidator(req, res, next, object);
+} 
+
+export const validateorder = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const object = Joi.object({
+        amount: Joi.number().required(),
+        first_name: Joi.string().required(),
+        last_name: Joi.string().required(),
+        email: Joi.string().required(),
+        phone_no: Joi.string().required(),
+        address_line: Joi.string().required(),
+        shipping_address: Joi.string().required(),
+        city: Joi.string().required(),
+        state: Joi.string().required(),
+        zipcode: Joi.string().required(),
+    });
+    await requestSchemaValidator(req, res, next, object);
 }
 
-// ? validate request body for update items
-
-export const validateUpdateItems = (req: Request, res: Response, next: NextFunction) => {
-    const schema = Joi.object({
-        id: Joi.string().required(),
-        name: Joi.string().optional(),
-        price: Joi.number().optional(),
-        description: Joi.string().optional(),
-        category: Joi.string().optional(),
+export const validateCapturePayment = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const object = Joi.object({
+        orderCreationId: Joi.string().required(),
+        razorpayPaymentId: Joi.string().required(),
+        razorpayOrderId: Joi.string().required(),
+        razorpaySignature: Joi.string().required(),
     });
-    requestSchemaValidator(req, res, next, schema);
-}
-
-// ? validate request body for delete items
-
-export const validateDeleteItems = (req: Request, res: Response, next: NextFunction) => {
-    const schema = Joi.object({});
-
-    const param_shema = Joi.object({
-        id: Joi.string().required(),
-    });
-
-    requestSchemaValidator(req, res, next, schema, {
-        is_param: true,
-        param_shema,
-    });
-}
-
-
-// ? validate request body for get items by id
-
-export const validateGetItemsById = (req: Request, res: Response, next: NextFunction) => {
-    const schema = Joi.object({});
-
-    const param_shema = Joi.object({
-        id: Joi.string().required(),
-    });
-
-    requestSchemaValidator(req, res, next, schema, {
-        is_param: true,
-        param_shema,
-    });
-}
-
-// ? validate request body for get all items
-
-export const validateGetAllItems = (req: Request, res: Response, next: NextFunction) => {
-    // ? validate request body for get all items by page and limit from params
-    const schema = Joi.object({});
-
-    const param_shema = Joi.object({
-        type: Joi.string().valid("all", "single",'multiple','ascending','descending').required(),
-        offset: Joi.number().required(),
-    });
-
-    requestSchemaValidator(req, res, next, schema, {
-        is_param: true,
-        param_shema,
-    });
+    await requestSchemaValidator(req, res, next, object);
 }

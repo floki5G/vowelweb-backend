@@ -1,18 +1,46 @@
 import { Router } from "express";
-import { deleteItems, getAllItems, getItemsById, postItems, updateItems } from "./controller";
-import { validateDeleteItems, validateGetAllItems, validateGetItemsById, validatePostItems, validateUpdateItems } from "./validators";
+import { capturePayment, createOrderIntent, getMenu, getOrders, upsertCategory, upsertCategoryProduct, upsertProduct } from "./controller";
+import { categoryProductValidator, categoryValidator, productValidator, validateCapturePayment, validateorder } from "./validators";
 const adminRouter = Router();
 
-adminRouter.get(
-  "/items/:type/:offset", validateGetAllItems, getAllItems
-);
-adminRouter.delete(
-  "/items/delete/:id", validateDeleteItems, deleteItems
+/**
+ * @description Router for the routes
+ * @file index.ts
+ * /v1/api/admin/category/upsert
+ */
 
-);
-adminRouter.post("/items/create", validatePostItems, postItems);
+adminRouter.post("/category/upsert", categoryValidator, upsertCategory);
+/**
+ * @description Router for the routes
+ * @file index.ts
+ * /v1/api/admin/product/upsert
+ * @Method POST
+ */
+adminRouter.post("/product/upsert", productValidator, upsertProduct);
 
-adminRouter.get("/items/:id", validateGetItemsById, getItemsById);
+/**
+ * @description Router for the routes
+ * @file index.ts
+ * /v1/api/admin/category-product/upsert
+ * @Method POST
+ */
+adminRouter.post("/category-product/upsert", categoryProductValidator, upsertCategoryProduct);
 
-adminRouter.post("/items/update", validateUpdateItems, updateItems);
+
+/**
+ * @description Router for the routes
+ * @file index.ts
+ * /v1/api/admin/menu
+ * @Method GET
+ */
+adminRouter.get("/menu", getMenu);
+
+
+/**
+ * 
+ */
+adminRouter.post('/order', validateorder, createOrderIntent)
+adminRouter.post('/payment-capture', validateCapturePayment, capturePayment)
+adminRouter.get('/orders', getOrders)
+
 export default adminRouter;
